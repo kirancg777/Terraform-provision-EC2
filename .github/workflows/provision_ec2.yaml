@@ -2,12 +2,7 @@ name: Provision t2.micro EC2
 
 on:
   workflow_dispatch:
-    inputs:
-      ec2-name:
-        description: EC2 name
-        required: true
-        default: 'App Server'
-        type: string
+  
 jobs:
   provision-ec2:
     runs-on: ubuntu-latest
@@ -15,7 +10,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          using: "node16"
+          node-version: "16"
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -28,8 +23,6 @@ jobs:
           terraform_wrapper: false
       - name: Terraform Apply
         id:   apply
-        env:
-          TF_VAR_ec2_name:  "${{ github.event.inputs.ec2-name }}"
         run: |
           cd terraform/
           terraform init
